@@ -2,6 +2,8 @@
 
 Automated deal-sourcing system that monitored **Facebook Marketplace and eBay 24/7** for underpriced dirt bikes (Honda, Yamaha, Kawasaki, Suzuki, KTM, Husqvarna, GasGas), built and deployed for a motorcycle reseller client. It scanned thousands of listings per hour, flagged items priced below retail benchmarks, and fired instant "🔥 New Deal Found" email alerts — giving the client first-mover advantage on undervalued bikes.
 
+![Workflow canvas](canvas.png)
+
 Over its run it delivered 2,800+ deal alerts and generated ~$1,000 in commissions.
 
 ## How it works
