@@ -1,0 +1,3872 @@
+{
+  "name": "Daniel_FB",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c990a70e-b19b-4474-b6c0-92b501398423",
+              "name": "Facebook URL",
+              "value": "={{ $json.facebookUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "01ad754c-17c7-493d-84ee-266499afc030",
+              "name": "ID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "32a56f57-4e77-45f1-8e11-8a5af236988b",
+              "name": "listing URL",
+              "value": "={{ $json.listingUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "366c78d0-b1d8-4537-a2cb-06361eac3262",
+              "name": "primary listing photo",
+              "value": "={{ $json.primary_listing_photo }}",
+              "type": "string"
+            },
+            {
+              "id": "88600edb-aa3e-4758-9d30-2b352dfb5f46",
+              "name": "listing price",
+              "value": "={{ $json.listing_price }}",
+              "type": "string"
+            },
+            {
+              "id": "11104b06-52ce-4e72-acb9-e204244fe55d",
+              "name": "location",
+              "value": "={{ $json.location.reverse_geocode.city_page.display_name }}",
+              "type": "string"
+            },
+            {
+              "id": "e014a54e-971c-4de4-b073-4c9c22fdbb5f",
+              "name": "Title",
+              "value": "={{ $json.marketplace_listing_title }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1664,
+        -336
+      ],
+      "id": "0c04b111-32cc-423f-94ce-1cd709db50a9",
+      "name": "Edit Fields",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID_3",
+          "mode": "list",
+          "cachedResultName": "FB_URLS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_3/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Honda Urls",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_3/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2560,
+        -192
+      ],
+      "id": "6737106d-a19a-432c-a712-1144f423eba2",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SET_YOUR_OWN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "removeItemsSeenInPreviousExecutions",
+        "dedupeValue": "={{ $json.ID }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        -1440,
+        -336
+      ],
+      "id": "41a38935-2e7c-4280-a3f3-d0ef89ce6cbd",
+      "name": "Remove Duplicates",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID_2",
+          "mode": "list",
+          "cachedResultName": "FB Scrap",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Honda",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit#gid=0"
+        },
+        "keepFirstRow": true
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2784,
+        -192
+      ],
+      "id": "f03dca5d-22ca-44df-85c5-6ca672c56ada",
+      "name": "Clear sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SET_YOUR_OWN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/apify~facebook-marketplace-scraper/run-sync-get-dataset-items?token=YOUR_APIFY_TOKEN",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"resultsLimit\": 1,\n    \"startUrls\": [\n        {\n            \"url\": \"{{ $json['Honda Urls'] }}\",\n            \"method\": \"GET\"\n        }\n    ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2112,
+        -336
+      ],
+      "id": "326377e4-4d8a-479f-8044-d017f335598f",
+      "name": "fb scrapper"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b942f52e-ab68-4480-9591-de5807cd83d0",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "crf150r",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "66997262-1002-4a14-9dbd-e16da6275f35",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "crf450r",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "ebb49c8b-92e1-4b2f-85f4-5b452e027597",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "crf250r",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "d1052deb-c832-4c71-8378-578ffb20a527",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "cr250r",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "bfc7a915-939c-42eb-996a-d3f31594cc65",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "cr125r",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "2b4c00c7-ced6-44ae-b82c-39d3e0d58daf",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "cr85",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "bf0b8e37-813f-41d9-beee-bf0557c6085b",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "honda crf",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "a7bbe69a-68de-4f98-a35d-f3a726efeea2",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "cr450r",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "6ded6213-ba65-4408-812e-f57a1eb07747",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase()}}",
+              "rightValue": "cr250r",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "45239ff4-5350-46b0-9885-1525a8b1c08e",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "cr150r",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -1888,
+        -336
+      ],
+      "id": "8ff75fa4-a8a7-4a7c-a6b8-3b88f0490da9",
+      "name": "Filter",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -2336,
+        -192
+      ],
+      "id": "90f116c6-d08b-4490-91d4-217f6faf9670",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c990a70e-b19b-4474-b6c0-92b501398423",
+              "name": "Facebook URL",
+              "value": "={{ $json.facebookUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "01ad754c-17c7-493d-84ee-266499afc030",
+              "name": "ID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "32a56f57-4e77-45f1-8e11-8a5af236988b",
+              "name": "listing URL",
+              "value": "={{ $json.listingUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "366c78d0-b1d8-4537-a2cb-06361eac3262",
+              "name": "primary listing photo",
+              "value": "={{ $json.primary_listing_photo }}",
+              "type": "string"
+            },
+            {
+              "id": "88600edb-aa3e-4758-9d30-2b352dfb5f46",
+              "name": "listing price",
+              "value": "={{ $json.listing_price }}",
+              "type": "string"
+            },
+            {
+              "id": "11104b06-52ce-4e72-acb9-e204244fe55d",
+              "name": "location",
+              "value": "={{ $json.location.reverse_geocode.city_page.display_name }}",
+              "type": "string"
+            },
+            {
+              "id": "e014a54e-971c-4de4-b073-4c9c22fdbb5f",
+              "name": "Title",
+              "value": "={{ $json.marketplace_listing_title }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1664,
+        48
+      ],
+      "id": "2ee31109-0ee5-47b6-9e09-d7e6cf79571b",
+      "name": "Edit Fields1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID_3",
+          "mode": "list",
+          "cachedResultName": "FB_URLS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_3/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 743192930,
+          "mode": "list",
+          "cachedResultName": "Yamaha Urls",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_3/edit#gid=743192930"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2560,
+        192
+      ],
+      "id": "6d23d4ad-dd1f-434a-a810-051ff839a015",
+      "name": "Get row(s) in sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SET_YOUR_OWN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "removeItemsSeenInPreviousExecutions",
+        "dedupeValue": "={{ $json.ID }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        -1440,
+        48
+      ],
+      "id": "77c0c80f-b782-4aa5-b0cb-92c7ea6256eb",
+      "name": "Remove Duplicates1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID_2",
+          "mode": "list",
+          "cachedResultName": "FB Scrap",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1114153300,
+          "mode": "list",
+          "cachedResultName": "Yamaha",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit#gid=1114153300"
+        },
+        "keepFirstRow": true
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2784,
+        192
+      ],
+      "id": "e1c5374c-28f6-460d-916a-7314219cb0d7",
+      "name": "Clear sheet1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SET_YOUR_OWN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/apify~facebook-marketplace-scraper/run-sync-get-dataset-items?token=YOUR_APIFY_TOKEN",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"resultsLimit\": 1,\n    \"startUrls\": [\n        {\n            \"url\": \"{{ $json['Yamaha Urls'] }}\",\n            \"method\": \"GET\"\n        }\n    ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2112,
+        48
+      ],
+      "id": "c5985df0-1ebf-4d78-972a-2aa4357b9624",
+      "name": "fb scrapper1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b942f52e-ab68-4480-9591-de5807cd83d0",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "yz450f",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "66997262-1002-4a14-9dbd-e16da6275f35",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "yz250f",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "ebb49c8b-92e1-4b2f-85f4-5b452e027597",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "yz250",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "d1052deb-c832-4c71-8378-578ffb20a527",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "yz125",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "bfc7a915-939c-42eb-996a-d3f31594cc65",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "yz85",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "2b4c00c7-ced6-44ae-b82c-39d3e0d58daf",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "yz450",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "560038f9-0bb0-4eb4-b75d-8bf351645308",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "yamaha yz 450",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -1888,
+        48
+      ],
+      "id": "61063edd-8300-47a1-b41e-710ed6d9087a",
+      "name": "Filter1",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -2336,
+        192
+      ],
+      "id": "16cebedb-b18e-48fc-bc6d-b092a11c9451",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c990a70e-b19b-4474-b6c0-92b501398423",
+              "name": "Facebook URL",
+              "value": "={{ $json.facebookUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "01ad754c-17c7-493d-84ee-266499afc030",
+              "name": "ID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "32a56f57-4e77-45f1-8e11-8a5af236988b",
+              "name": "listing URL",
+              "value": "={{ $json.listingUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "366c78d0-b1d8-4537-a2cb-06361eac3262",
+              "name": "primary listing photo",
+              "value": "={{ $json.primary_listing_photo }}",
+              "type": "string"
+            },
+            {
+              "id": "88600edb-aa3e-4758-9d30-2b352dfb5f46",
+              "name": "listing price",
+              "value": "={{ $json.listing_price }}",
+              "type": "string"
+            },
+            {
+              "id": "11104b06-52ce-4e72-acb9-e204244fe55d",
+              "name": "location",
+              "value": "={{ $json.location.reverse_geocode.city_page.display_name }}",
+              "type": "string"
+            },
+            {
+              "id": "e014a54e-971c-4de4-b073-4c9c22fdbb5f",
+              "name": "Title",
+              "value": "={{ $json.marketplace_listing_title }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1664,
+        432
+      ],
+      "id": "0f082264-eef5-436b-8fa3-7e0a077675c4",
+      "name": "Edit Fields2",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID_3",
+          "mode": "list",
+          "cachedResultName": "FB_URLS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_3/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 298366078,
+          "mode": "list",
+          "cachedResultName": "Kawasaki Urls",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_3/edit#gid=298366078"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2560,
+        576
+      ],
+      "id": "6ce2e47a-b8a8-43c5-bd2d-8b1ae6321aa2",
+      "name": "Get row(s) in sheet2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SET_YOUR_OWN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "removeItemsSeenInPreviousExecutions",
+        "dedupeValue": "={{ $json.ID }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        -1440,
+        432
+      ],
+      "id": "9e86eaba-bb23-4696-b87c-3733ae80af6c",
+      "name": "Remove Duplicates2",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID_2",
+          "mode": "list",
+          "cachedResultName": "FB Scrap",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1995743562,
+          "mode": "list",
+          "cachedResultName": "kawasaki",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit#gid=1995743562"
+        },
+        "keepFirstRow": true
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2784,
+        576
+      ],
+      "id": "e37e48de-b4ad-4b8c-bfe7-c4e8695abdf8",
+      "name": "Clear sheet2",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SET_YOUR_OWN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/apify~facebook-marketplace-scraper/run-sync-get-dataset-items?token=YOUR_APIFY_TOKEN",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"resultsLimit\": 1,\n    \"startUrls\": [\n        {\n            \"url\": \"{{ $json['Kawasaki URls'] }}\",\n            \"method\": \"GET\"\n        }\n    ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2112,
+        432
+      ],
+      "id": "e674a964-66bd-41d9-a7e2-44670ee20336",
+      "name": "fb scrapper2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b942f52e-ab68-4480-9591-de5807cd83d0",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "kx450f",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "66997262-1002-4a14-9dbd-e16da6275f35",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "kx450",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "ebb49c8b-92e1-4b2f-85f4-5b452e027597",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "kx250f",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "d1052deb-c832-4c71-8378-578ffb20a527",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "kx250",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "bfc7a915-939c-42eb-996a-d3f31594cc65",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "kx125",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "2b4c00c7-ced6-44ae-b82c-39d3e0d58daf",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "kx112",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "340cfeb5-e2c8-4709-af25-e0e30a5c4165",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "kx100",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "845d9c18-9ac7-4e6e-ab14-45d13a61a2c8",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "kx85",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "5c52c0fb-d665-43dc-b0b4-5ef98234ab2c",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "kawasaki kx",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -1888,
+        432
+      ],
+      "id": "af923b48-870f-49e5-934e-757644277886",
+      "name": "Filter2",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -2336,
+        576
+      ],
+      "id": "9f67ac33-7a00-490c-a04f-3299efc697c1",
+      "name": "Loop Over Items2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c990a70e-b19b-4474-b6c0-92b501398423",
+              "name": "Facebook URL",
+              "value": "={{ $json.facebookUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "01ad754c-17c7-493d-84ee-266499afc030",
+              "name": "ID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "32a56f57-4e77-45f1-8e11-8a5af236988b",
+              "name": "listing URL",
+              "value": "={{ $json.listingUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "366c78d0-b1d8-4537-a2cb-06361eac3262",
+              "name": "primary listing photo",
+              "value": "={{ $json.primary_listing_photo }}",
+              "type": "string"
+            },
+            {
+              "id": "88600edb-aa3e-4758-9d30-2b352dfb5f46",
+              "name": "listing price",
+              "value": "={{ $json.listing_price }}",
+              "type": "string"
+            },
+            {
+              "id": "11104b06-52ce-4e72-acb9-e204244fe55d",
+              "name": "location",
+              "value": "={{ $json.location.reverse_geocode.city_page.display_name }}",
+              "type": "string"
+            },
+            {
+              "id": "e014a54e-971c-4de4-b073-4c9c22fdbb5f",
+              "name": "Title",
+              "value": "={{ $json.marketplace_listing_title }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1664,
+        816
+      ],
+      "id": "b55f4fe0-2586-438d-831d-a34d6754b66d",
+      "name": "Edit Fields3",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID_3",
+          "mode": "list",
+          "cachedResultName": "FB_URLS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_3/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1688672647,
+          "mode": "list",
+          "cachedResultName": "Suzuki Urls",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_3/edit#gid=1688672647"
+        },
+        "combineFilters": "OR",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2560,
+        960
+      ],
+      "id": "15853b83-01dd-4b3c-8f91-0fe8f773946c",
+      "name": "Get row(s) in sheet3",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SET_YOUR_OWN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "removeItemsSeenInPreviousExecutions",
+        "dedupeValue": "={{ $json.ID }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        -1440,
+        816
+      ],
+      "id": "d24d72f9-7f53-403d-93e2-35439d9fa2bf",
+      "name": "Remove Duplicates3",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID_2",
+          "mode": "list",
+          "cachedResultName": "FB Scrap",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1873551650,
+          "mode": "list",
+          "cachedResultName": "suzuki",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit#gid=1873551650"
+        },
+        "keepFirstRow": true
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2784,
+        960
+      ],
+      "id": "09322cd1-823a-41b8-97ab-f4d4f0c6fa6d",
+      "name": "Clear sheet3",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SET_YOUR_OWN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/apify~facebook-marketplace-scraper/run-sync-get-dataset-items?token=YOUR_APIFY_TOKEN",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"resultsLimit\": 1,\n    \"startUrls\": [\n        {\n            \"url\": \"{{ $json['Suzuki urls'] }}\",\n            \"method\": \"GET\"\n        }\n    ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2112,
+        816
+      ],
+      "id": "46cfeb12-69e7-45ef-99db-2bce234b03a3",
+      "name": "fb scrapper3"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b942f52e-ab68-4480-9591-de5807cd83d0",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "rmz 450f",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "66997262-1002-4a14-9dbd-e16da6275f35",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "rmz 250f",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "ebb49c8b-92e1-4b2f-85f4-5b452e027597",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "rm250",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "d1052deb-c832-4c71-8378-578ffb20a527",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "rm125",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "bfc7a915-939c-42eb-996a-d3f31594cc65",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "suzuki rm",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "2b4c00c7-ced6-44ae-b82c-39d3e0d58daf",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "suzuki rmz",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "bf0831ff-e443-4bb1-acc0-a397e9ca71d8",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "suzuki rm-z",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "3f9660e3-6120-4669-a6dd-0912f58b4693",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "rmz 450",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -1888,
+        816
+      ],
+      "id": "c3301497-b42d-4d11-94bb-dab7d45e31f4",
+      "name": "Filter3",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -2336,
+        960
+      ],
+      "id": "a9cf9518-3b97-47de-9d1d-46443c315062",
+      "name": "Loop Over Items3"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID_3",
+          "mode": "list",
+          "cachedResultName": "FB_URLS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_3/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1353448143,
+          "mode": "list",
+          "cachedResultName": "KTM Urls",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_3/edit#gid=1353448143"
+        },
+        "combineFilters": "OR",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2560,
+        1344
+      ],
+      "id": "767653fd-634d-4477-8ecf-e513ffec1676",
+      "name": "Get row(s) in sheet4",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SET_YOUR_OWN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "removeItemsSeenInPreviousExecutions",
+        "dedupeValue": "={{ $json.ID }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        -1440,
+        1200
+      ],
+      "id": "f965d7cc-b7e5-4fa6-9ae1-e07c1d6d4ff1",
+      "name": "Remove Duplicates4",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID_2",
+          "mode": "list",
+          "cachedResultName": "FB Scrap",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 853367122,
+          "mode": "list",
+          "cachedResultName": "KTM",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit#gid=853367122"
+        },
+        "keepFirstRow": true
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2784,
+        1344
+      ],
+      "id": "7e7619d3-4aba-4971-9c53-54c693842acf",
+      "name": "Clear sheet4",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SET_YOUR_OWN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/apify~facebook-marketplace-scraper/run-sync-get-dataset-items?token=YOUR_APIFY_TOKEN",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"resultsLimit\": 1,\n    \"startUrls\": [\n        {\n            \"url\": \"{{ $json['KTM Urls'] }}\",\n            \"method\": \"GET\"\n        }\n    ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2112,
+        1200
+      ],
+      "id": "c2e836f4-7bac-4d9a-adb4-9902345b61d1",
+      "name": "fb scrapper4"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b942f52e-ab68-4480-9591-de5807cd83d0",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "ktm sx-f",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "66997262-1002-4a14-9dbd-e16da6275f35",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "ktm 450",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "ebb49c8b-92e1-4b2f-85f4-5b452e027597",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "ktm 450 sxf",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "d1052deb-c832-4c71-8378-578ffb20a527",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "ktm 85",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "bfc7a915-939c-42eb-996a-d3f31594cc65",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "ktm 350 sxf",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "2b4c00c7-ced6-44ae-b82c-39d3e0d58daf",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "ktm 350",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "1156e68b-871f-422c-af0b-655b214884b6",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "ktm 250",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "b05b8bfe-2fdf-47dc-9cdc-0be14485fd18",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "ktm 300",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "e8c12a20-1dcb-487c-99a8-9e917d88b004",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "ktm 250",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "f1c01370-3312-4d6b-bab3-86870197e49c",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "ktm1 25",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -1888,
+        1200
+      ],
+      "id": "102eb3db-c7f2-481e-bcdb-395357c9f670",
+      "name": "Filter4",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -2336,
+        1344
+      ],
+      "id": "4f217ba4-d1d7-4149-9f18-f508a7470d60",
+      "name": "Loop Over Items4"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c990a70e-b19b-4474-b6c0-92b501398423",
+              "name": "Facebook URL",
+              "value": "={{ $json.facebookUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "01ad754c-17c7-493d-84ee-266499afc030",
+              "name": "ID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "32a56f57-4e77-45f1-8e11-8a5af236988b",
+              "name": "listing URL",
+              "value": "={{ $json.listingUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "366c78d0-b1d8-4537-a2cb-06361eac3262",
+              "name": "primary listing photo",
+              "value": "={{ $json.primary_listing_photo }}",
+              "type": "string"
+            },
+            {
+              "id": "88600edb-aa3e-4758-9d30-2b352dfb5f46",
+              "name": "listing price",
+              "value": "={{ $json.listing_price }}",
+              "type": "string"
+            },
+            {
+              "id": "11104b06-52ce-4e72-acb9-e204244fe55d",
+              "name": "location",
+              "value": "={{ $json.location.reverse_geocode.city_page.display_name }}",
+              "type": "string"
+            },
+            {
+              "id": "e014a54e-971c-4de4-b073-4c9c22fdbb5f",
+              "name": "Title",
+              "value": "={{ $json.marketplace_listing_title }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1664,
+        1608
+      ],
+      "id": "5a869286-a2f4-443f-8d3f-f03d06bba094",
+      "name": "Edit Fields5",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID_3",
+          "mode": "list",
+          "cachedResultName": "FB_URLS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_3/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 698113262,
+          "mode": "list",
+          "cachedResultName": "Husqvarna Urls",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_3/edit#gid=698113262"
+        },
+        "combineFilters": "OR",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2560,
+        1752
+      ],
+      "id": "264bf8f3-e223-4469-94c6-01d80749b27d",
+      "name": "Get row(s) in sheet5",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SET_YOUR_OWN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "removeItemsSeenInPreviousExecutions",
+        "dedupeValue": "={{ $json.ID }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        -1440,
+        1608
+      ],
+      "id": "d5d412ac-9f53-4eae-8ea1-044d99856e24",
+      "name": "Remove Duplicates5",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID_2",
+          "mode": "list",
+          "cachedResultName": "FB Scrap",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 671939747,
+          "mode": "list",
+          "cachedResultName": "Husqvarna",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit#gid=671939747"
+        },
+        "keepFirstRow": true
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2784,
+        1752
+      ],
+      "id": "77cf9b4f-74c9-439a-820a-3a27d89a7144",
+      "name": "Clear sheet5",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SET_YOUR_OWN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/apify~facebook-marketplace-scraper/run-sync-get-dataset-items?token=YOUR_APIFY_TOKEN",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"resultsLimit\": 1,\n    \"startUrls\": [\n        {\n            \"url\": \"{{ $json['Husqvarna Urls'] }}\",\n            \"method\": \"GET\"\n        }\n    ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2112,
+        1608
+      ],
+      "id": "c7fec9ad-6ea6-45f0-b2e4-8b77dce875c1",
+      "name": "fb scrapper5"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "2b4c00c7-ced6-44ae-b82c-39d3e0d58daf",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "husqvarna",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -1888,
+        1608
+      ],
+      "id": "21b1e07d-f1c9-4466-9778-c633b282ec6b",
+      "name": "Filter5",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -2336,
+        1752
+      ],
+      "id": "26f4bdf6-3961-41f1-83ba-f160773d154c",
+      "name": "Loop Over Items5"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c990a70e-b19b-4474-b6c0-92b501398423",
+              "name": "Facebook URL",
+              "value": "={{ $json.facebookUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "01ad754c-17c7-493d-84ee-266499afc030",
+              "name": "ID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "32a56f57-4e77-45f1-8e11-8a5af236988b",
+              "name": "listing URL",
+              "value": "={{ $json.listingUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "366c78d0-b1d8-4537-a2cb-06361eac3262",
+              "name": "primary listing photo",
+              "value": "={{ $json.primary_listing_photo }}",
+              "type": "string"
+            },
+            {
+              "id": "88600edb-aa3e-4758-9d30-2b352dfb5f46",
+              "name": "listing price",
+              "value": "={{ $json.listing_price }}",
+              "type": "string"
+            },
+            {
+              "id": "11104b06-52ce-4e72-acb9-e204244fe55d",
+              "name": "location",
+              "value": "={{ $json.location.reverse_geocode.city_page.display_name }}",
+              "type": "string"
+            },
+            {
+              "id": "e014a54e-971c-4de4-b073-4c9c22fdbb5f",
+              "name": "Title",
+              "value": "={{ $json.marketplace_listing_title }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1664,
+        1992
+      ],
+      "id": "905ea1a2-2158-45d8-abd0-2146e50bb5cf",
+      "name": "Edit Fields6",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID_3",
+          "mode": "list",
+          "cachedResultName": "FB_URLS",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_3/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 538997042,
+          "mode": "list",
+          "cachedResultName": "GasGas Urls",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_3/edit#gid=538997042"
+        },
+        "combineFilters": "OR",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2560,
+        2136
+      ],
+      "id": "661eba1c-de5c-4fb1-89b7-46a2c68c74fe",
+      "name": "Get row(s) in sheet6",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SET_YOUR_OWN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "removeItemsSeenInPreviousExecutions",
+        "dedupeValue": "={{ $json.ID }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        -1440,
+        1992
+      ],
+      "id": "252f1a70-afa4-4e08-9997-c3af130b3129",
+      "name": "Remove Duplicates6",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "clear",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID_2",
+          "mode": "list",
+          "cachedResultName": "FB Scrap",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 800754915,
+          "mode": "list",
+          "cachedResultName": "GasGas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit#gid=800754915"
+        },
+        "keepFirstRow": true
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -2784,
+        2136
+      ],
+      "id": "8f9e09df-92ce-4015-86db-56b64a3e3806",
+      "name": "Clear sheet6",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SET_YOUR_OWN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/apify~facebook-marketplace-scraper/run-sync-get-dataset-items?token=YOUR_APIFY_TOKEN",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n    \"resultsLimit\": 1,\n    \"startUrls\": [\n        {\n            \"url\": \"{{ $json['GasGas Urls'] }}\",\n            \"method\": \"GET\"\n        }\n    ]\n}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -2112,
+        1992
+      ],
+      "id": "f88ee740-a292-472b-9adc-1babd6f3a1aa",
+      "name": "fb scrapper6"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "b942f52e-ab68-4480-9591-de5807cd83d0",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "gas gas",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "66997262-1002-4a14-9dbd-e16da6275f35",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "gasgas",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "ebb49c8b-92e1-4b2f-85f4-5b452e027597",
+              "leftValue": "={{ $json.marketplace_listing_title.toLowerCase() }}",
+              "rightValue": "mc",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -1888,
+        1992
+      ],
+      "id": "7271cb82-7e15-4ba3-93ad-4269fc0e67c1",
+      "name": "Filter6",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        -2336,
+        2136
+      ],
+      "id": "a0bcca47-02d2-4c26-872b-d43e8a610eb3",
+      "name": "Loop Over Items6"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID_2",
+          "mode": "list",
+          "cachedResultName": "FB Scrap",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Honda",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.ID }}",
+            "FB LISTING URL": "={{ $json['listing URL'] }}",
+            "PRICE": "={{ $json['listing price'] }}",
+            "LOCATION": "={{ $json.location }}",
+            "Title": "={{ $json.Title }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "PRICE",
+              "displayName": "PRICE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "LOCATION",
+              "displayName": "LOCATION",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "FB LISTING URL",
+              "displayName": "FB LISTING URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1216,
+        -336
+      ],
+      "id": "24dc76e3-cc62-4647-a0cb-0f1540234a8b",
+      "name": "Honda",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SET_YOUR_OWN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID_2",
+          "mode": "list",
+          "cachedResultName": "FB Scrap",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1114153300,
+          "mode": "list",
+          "cachedResultName": "Yamaha",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit#gid=1114153300"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.ID }}",
+            "FB LISTING URL": "={{ $json['listing URL'] }}",
+            "PRICE": "={{ $json['listing price'] }}",
+            "LOCATION": "={{ $json.location }}",
+            "Title": "={{ $json.Title }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "PRICE",
+              "displayName": "PRICE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "LOCATION",
+              "displayName": "LOCATION",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "FB LISTING URL",
+              "displayName": "FB LISTING URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1216,
+        48
+      ],
+      "id": "cfccc78d-5f20-41c0-a30a-5f3a53f44acf",
+      "name": "Yamaha",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SET_YOUR_OWN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID_2",
+          "mode": "list",
+          "cachedResultName": "FB Scrap",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1995743562,
+          "mode": "list",
+          "cachedResultName": "kawasaki",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit#gid=1995743562"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.ID }}",
+            "PRICE": "={{ $json['listing price'] }}",
+            "LOCATION": "={{ $json.location }}",
+            "Title": "={{ $json.Title }}",
+            "FB LISTING URL": "={{ $json['listing URL'] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "PRICE",
+              "displayName": "PRICE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "LOCATION",
+              "displayName": "LOCATION",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "FB LISTING URL",
+              "displayName": "FB LISTING URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1216,
+        432
+      ],
+      "id": "666043a1-563e-47a7-aed5-7f8cf6926e9b",
+      "name": "kawasaki",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SET_YOUR_OWN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID_2",
+          "mode": "list",
+          "cachedResultName": "FB Scrap",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1873551650,
+          "mode": "list",
+          "cachedResultName": "suzuki",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit#gid=1873551650"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.ID }}",
+            "FB LISTING URL": "={{ $json['listing URL'] }}",
+            "PRICE": "={{ $json['listing price'] }}",
+            "LOCATION": "={{ $json.location }}",
+            "Title": "={{ $json.Title }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "PRICE",
+              "displayName": "PRICE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "LOCATION",
+              "displayName": "LOCATION",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "FB LISTING URL",
+              "displayName": "FB LISTING URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1216,
+        816
+      ],
+      "id": "1d80ef8e-b381-47d2-8b68-86e5ee31f5eb",
+      "name": "suzuki",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SET_YOUR_OWN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID_2",
+          "mode": "list",
+          "cachedResultName": "FB Scrap",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 853367122,
+          "mode": "list",
+          "cachedResultName": "KTM",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit#gid=853367122"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.ID }}",
+            "FB LISTING URL": "={{ $json['listing URL'] }}",
+            "PRICE": "={{ $json['listing price'] }}",
+            "LOCATION": "={{ $json.location }}",
+            "Title": "={{ $json.Title }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "PRICE",
+              "displayName": "PRICE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "LOCATION",
+              "displayName": "LOCATION",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "FB LISTING URL",
+              "displayName": "FB LISTING URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1216,
+        1200
+      ],
+      "id": "4548d9ff-081e-4ad1-828f-dd13c5e290ab",
+      "name": "KTM",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SET_YOUR_OWN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID_2",
+          "mode": "list",
+          "cachedResultName": "FB Scrap",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 671939747,
+          "mode": "list",
+          "cachedResultName": "Husqvarna",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit#gid=671939747"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.ID }}",
+            "FB LISTING URL": "={{ $json['listing URL'] }}",
+            "PRICE": "={{ $json['listing price'] }}",
+            "LOCATION": "={{ $json.location }}",
+            "Title": "={{ $json.Title }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "PRICE",
+              "displayName": "PRICE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "LOCATION",
+              "displayName": "LOCATION",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "FB LISTING URL",
+              "displayName": "FB LISTING URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1216,
+        1608
+      ],
+      "id": "068b6965-f919-45e1-90b0-e7c044a1c7f4",
+      "name": "Husqvarna",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SET_YOUR_OWN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "YOUR_SHEET_ID_2",
+          "mode": "list",
+          "cachedResultName": "FB Scrap",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 800754915,
+          "mode": "list",
+          "cachedResultName": "GasGas",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/YOUR_SHEET_ID_2/edit#gid=800754915"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "ID": "={{ $json.ID }}",
+            "FB LISTING URL": "={{ $json['listing URL'] }}",
+            "PRICE": "={{ $json['listing price'] }}",
+            "LOCATION": "={{ $json.location }}",
+            "Title": "={{ $json.Title }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "PRICE",
+              "displayName": "PRICE",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "LOCATION",
+              "displayName": "LOCATION",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "FB LISTING URL",
+              "displayName": "FB LISTING URL",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Title",
+              "displayName": "Title",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1216,
+        1992
+      ],
+      "id": "fb4a9d14-e3f0-4d54-8b94-902a9979285f",
+      "name": "GasGas",
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "SET_YOUR_OWN",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "client@example.com",
+        "subject": "Place Order",
+        "emailType": "text",
+        "message": "=listing url: {{ $('Remove Duplicates').item.json['listing URL'] }}\n\nPrice: {{ $('Remove Duplicates').item.json['listing price'] }}\n\nLocation: {{ $('Remove Duplicates').item.json.location }}\n\nTitle: {{ $('Remove Duplicates').item.json.Title }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -768,
+        -264
+      ],
+      "id": "8b80ea4c-f89d-4400-8db3-25da9ce84bde",
+      "name": "Send a message",
+      "webhookId": "7678e919-e8cb-4429-928e-2fef1828a302",
+      "alwaysOutputData": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SET_YOUR_OWN",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ba61a12b-a2dc-4544-a890-739fbb11cc08",
+              "leftValue": "={{ $('Edit Fields').item.json.ID }}",
+              "rightValue": "={{ $('Remove Duplicates').item.json.ID }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "ae91d937-09dd-4520-a4c4-0ec7d4e31b93",
+              "leftValue": "={{ $('Remove Duplicates').item.json.ID }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -992,
+        -336
+      ],
+      "id": "1e611437-f194-4606-add4-dbde1d55fdf4",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "sendTo": "client@example.com",
+        "subject": "Place Order",
+        "emailType": "text",
+        "message": "=listing url: {{ $('Remove Duplicates1').item.json['listing URL'] }}\n\nPrice: {{ $('Remove Duplicates1').item.json['listing price'] }}\n\nLocation: {{ $('Remove Duplicates1').item.json.location }}\n\nTitle: {{ $('Remove Duplicates1').item.json.Title }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -768,
+        120
+      ],
+      "id": "8e94ed61-7c69-4c57-94b1-3a727b848df4",
+      "name": "Send a message1",
+      "webhookId": "7678e919-e8cb-4429-928e-2fef1828a302",
+      "alwaysOutputData": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SET_YOUR_OWN",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ba61a12b-a2dc-4544-a890-739fbb11cc08",
+              "leftValue": "={{ $('Edit Fields1').item.json.ID }}",
+              "rightValue": "={{ $('Remove Duplicates1').item.json.ID }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "ae91d937-09dd-4520-a4c4-0ec7d4e31b93",
+              "leftValue": "={{ $('Remove Duplicates1').item.json.ID }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -992,
+        48
+      ],
+      "id": "685f934e-4b7b-4815-b3df-a0fe8f8faf3e",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ba61a12b-a2dc-4544-a890-739fbb11cc08",
+              "leftValue": "={{ $('Edit Fields2').item.json.ID }}",
+              "rightValue": "={{ $('Remove Duplicates2').item.json.ID }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "ae91d937-09dd-4520-a4c4-0ec7d4e31b93",
+              "leftValue": "={{ $('Remove Duplicates2').item.json.ID }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -992,
+        432
+      ],
+      "id": "eac3868b-21f3-4d4e-8007-e533ce8c975e",
+      "name": "If2"
+    },
+    {
+      "parameters": {
+        "sendTo": "client@example.com",
+        "subject": "Place Order",
+        "emailType": "text",
+        "message": "=listing url: {{ $('Remove Duplicates2').item.json['listing URL'] }}\n\nPrice: {{ $('Remove Duplicates2').item.json['listing price'] }}\n\nLocation: {{ $('Remove Duplicates2').item.json.location }}\n\nTitle: {{ $('Remove Duplicates2').item.json.Title }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -768,
+        504
+      ],
+      "id": "4274b36b-b3f0-49c6-ac3f-db60462287ff",
+      "name": "Send a message2",
+      "webhookId": "7678e919-e8cb-4429-928e-2fef1828a302",
+      "alwaysOutputData": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SET_YOUR_OWN",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ba61a12b-a2dc-4544-a890-739fbb11cc08",
+              "leftValue": "={{ $('Edit Fields3').item.json.ID }}",
+              "rightValue": "={{ $('Remove Duplicates3').item.json.ID }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "ae91d937-09dd-4520-a4c4-0ec7d4e31b93",
+              "leftValue": "={{ $('Remove Duplicates3').item.json.ID }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -992,
+        816
+      ],
+      "id": "7e474146-a2de-4d47-99f7-ee2bb6c91d45",
+      "name": "If3"
+    },
+    {
+      "parameters": {
+        "sendTo": "client@example.com",
+        "subject": "Place Order",
+        "emailType": "text",
+        "message": "=listing url: {{ $('Remove Duplicates3').item.json['listing URL'] }}\n\nPrice: {{ $('Remove Duplicates3').item.json['listing price'] }}\n\nLocation: {{ $('Remove Duplicates3').item.json.location }}\n\nTitle: {{ $('Remove Duplicates3').item.json.Title }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -768,
+        888
+      ],
+      "id": "0bfa18de-9dac-4835-9ba1-dfdf5134b766",
+      "name": "Send a message3",
+      "webhookId": "7678e919-e8cb-4429-928e-2fef1828a302",
+      "alwaysOutputData": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SET_YOUR_OWN",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ba61a12b-a2dc-4544-a890-739fbb11cc08",
+              "leftValue": "={{ $('Edit Fields4').item.json.ID }}",
+              "rightValue": "={{ $('Remove Duplicates4').item.json.ID }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "ae91d937-09dd-4520-a4c4-0ec7d4e31b93",
+              "leftValue": "={{ $('Remove Duplicates4').item.json.ID }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -992,
+        1272
+      ],
+      "id": "b5808ddd-0623-417f-8e8f-0d3f4bf87794",
+      "name": "If4"
+    },
+    {
+      "parameters": {
+        "sendTo": "client@example.com",
+        "subject": "Place Order",
+        "emailType": "text",
+        "message": "=listing url: {{ $('Remove Duplicates4').item.json['listing URL'] }}\n\nPrice: {{ $('Remove Duplicates4').item.json['listing price'] }}\n\nLocation: {{ $('Remove Duplicates4').item.json.location }}\n\nTitle: {{ $('Remove Duplicates4').item.json.Title }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -768,
+        1344
+      ],
+      "id": "8530e70c-d560-4189-9603-21ab482f493d",
+      "name": "Send a message4",
+      "webhookId": "7678e919-e8cb-4429-928e-2fef1828a302",
+      "alwaysOutputData": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SET_YOUR_OWN",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ba61a12b-a2dc-4544-a890-739fbb11cc08",
+              "leftValue": "={{ $('Edit Fields5').item.json.ID }}",
+              "rightValue": "={{ $('Remove Duplicates5').item.json.ID }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "ae91d937-09dd-4520-a4c4-0ec7d4e31b93",
+              "leftValue": "={{ $('Remove Duplicates5').item.json.ID }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -992,
+        1608
+      ],
+      "id": "718a56c8-d35a-42ef-9809-7998922ab88f",
+      "name": "If5"
+    },
+    {
+      "parameters": {
+        "sendTo": "client@example.com",
+        "subject": "Place Order",
+        "emailType": "text",
+        "message": "=listing url: {{ $('Remove Duplicates5').item.json['listing URL'] }}\n\nPrice: {{ $('Remove Duplicates5').item.json['listing price'] }}\n\nLocation: {{ $('Remove Duplicates5').item.json.location }}\n\nTitle: {{ $('Remove Duplicates5').item.json.Title }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -768,
+        1680
+      ],
+      "id": "7aabfa8c-b48e-44cf-a147-72058478e972",
+      "name": "Send a message5",
+      "webhookId": "7678e919-e8cb-4429-928e-2fef1828a302",
+      "alwaysOutputData": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SET_YOUR_OWN",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "ba61a12b-a2dc-4544-a890-739fbb11cc08",
+              "leftValue": "={{ $('Edit Fields6').item.json.ID }}",
+              "rightValue": "={{ $('Remove Duplicates6').item.json.ID }}",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "ae91d937-09dd-4520-a4c4-0ec7d4e31b93",
+              "leftValue": "={{ $('Remove Duplicates6').item.json.ID }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        -992,
+        1992
+      ],
+      "id": "65f61c3e-7142-4797-b934-3a72a42b2f96",
+      "name": "If6"
+    },
+    {
+      "parameters": {
+        "sendTo": "client@example.com",
+        "subject": "Place Order",
+        "emailType": "text",
+        "message": "=listing url: {{ $('Remove Duplicates6').item.json['listing URL'] }}\n\nPrice: {{ $('Remove Duplicates6').item.json['listing price'] }}\n\nLocation: {{ $('Remove Duplicates6').item.json.location }}\n\nTitle: {{ $('Remove Duplicates6').item.json.Title }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -768,
+        2064
+      ],
+      "id": "f4251a43-a38d-4b73-8a52-249df4396d8f",
+      "name": "Send a message6",
+      "webhookId": "7678e919-e8cb-4429-928e-2fef1828a302",
+      "alwaysOutputData": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "SET_YOUR_OWN",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c990a70e-b19b-4474-b6c0-92b501398423",
+              "name": "Facebook URL",
+              "value": "={{ $json.facebookUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "01ad754c-17c7-493d-84ee-266499afc030",
+              "name": "ID",
+              "value": "={{ $json.id }}",
+              "type": "string"
+            },
+            {
+              "id": "32a56f57-4e77-45f1-8e11-8a5af236988b",
+              "name": "listing URL",
+              "value": "={{ $json.listingUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "366c78d0-b1d8-4537-a2cb-06361eac3262",
+              "name": "primary listing photo",
+              "value": "={{ $json.primary_listing_photo }}",
+              "type": "string"
+            },
+            {
+              "id": "88600edb-aa3e-4758-9d30-2b352dfb5f46",
+              "name": "listing price",
+              "value": "={{ $json.listing_price }}",
+              "type": "string"
+            },
+            {
+              "id": "11104b06-52ce-4e72-acb9-e204244fe55d",
+              "name": "location",
+              "value": "={{ $json.location.reverse_geocode.city_page.display_name }}",
+              "type": "string"
+            },
+            {
+              "id": "e014a54e-971c-4de4-b073-4c9c22fdbb5f",
+              "name": "Title",
+              "value": "={{ $json.marketplace_listing_title }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1664,
+        1200
+      ],
+      "id": "0eef3201-ee9c-4b59-97e2-b289e63bdf31",
+      "name": "Edit Fields4",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -3008,
+        960
+      ],
+      "id": "829c6f1f-d2a6-48d7-974f-747bfbad435f",
+      "name": "Schedule Trigger"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates": {
+      "main": [
+        [
+          {
+            "node": "Honda",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clear sheet": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fb scrapper": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "fb scrapper",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates1": {
+      "main": [
+        [
+          {
+            "node": "Yamaha",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clear sheet1": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fb scrapper1": {
+      "main": [
+        [
+          {
+            "node": "Filter1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "fb scrapper1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates2": {
+      "main": [
+        [
+          {
+            "node": "kawasaki",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clear sheet2": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fb scrapper2": {
+      "main": [
+        [
+          {
+            "node": "Filter2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter2": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items2": {
+      "main": [
+        [],
+        [
+          {
+            "node": "fb scrapper2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet3": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates3": {
+      "main": [
+        [
+          {
+            "node": "suzuki",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clear sheet3": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fb scrapper3": {
+      "main": [
+        [
+          {
+            "node": "Filter3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter3": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items3": {
+      "main": [
+        [],
+        [
+          {
+            "node": "fb scrapper3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet4": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates4": {
+      "main": [
+        [
+          {
+            "node": "KTM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clear sheet4": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fb scrapper4": {
+      "main": [
+        [
+          {
+            "node": "Filter4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter4": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items4": {
+      "main": [
+        [],
+        [
+          {
+            "node": "fb scrapper4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields5": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet5": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates5": {
+      "main": [
+        [
+          {
+            "node": "Husqvarna",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clear sheet5": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fb scrapper5": {
+      "main": [
+        [
+          {
+            "node": "Filter5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter5": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items5": {
+      "main": [
+        [],
+        [
+          {
+            "node": "fb scrapper5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields6": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet6": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Remove Duplicates6": {
+      "main": [
+        [
+          {
+            "node": "GasGas",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Clear sheet6": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "fb scrapper6": {
+      "main": [
+        [
+          {
+            "node": "Filter6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter6": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items6": {
+      "main": [
+        [],
+        [
+          {
+            "node": "fb scrapper6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Honda": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Yamaha": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "kawasaki": {
+      "main": [
+        [
+          {
+            "node": "If2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "suzuki": {
+      "main": [
+        [
+          {
+            "node": "If3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "KTM": {
+      "main": [
+        [
+          {
+            "node": "If4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Husqvarna": {
+      "main": [
+        [
+          {
+            "node": "If5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "GasGas": {
+      "main": [
+        [
+          {
+            "node": "If6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If2": {
+      "main": [
+        [
+          {
+            "node": "Send a message2",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message2": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If3": {
+      "main": [
+        [
+          {
+            "node": "Send a message3",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message3": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If4": {
+      "main": [
+        [
+          {
+            "node": "Send a message4",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message4": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields4": {
+      "main": [
+        [
+          {
+            "node": "Remove Duplicates4",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If5": {
+      "main": [
+        [
+          {
+            "node": "Send a message5",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message5": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items5",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If6": {
+      "main": [
+        [
+          {
+            "node": "Send a message6",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send a message6": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Clear sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Clear sheet1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Clear sheet2",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Clear sheet3",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Clear sheet4",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Clear sheet5",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Clear sheet6",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false
+  }
+}
